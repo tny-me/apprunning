@@ -4,336 +4,488 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Vida">
-<title>Vida</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VIDA">
+<title>VIDA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#eeece8;
-  --s1:#fafaf8;
-  --s2:#e8e5e0;
-  --s3:#dedad4;
-  --b1:#dedad4;
-  --b2:#c8c4bc;
-  --b3:#a8a49c;
-  --t1:#1c1b18;
-  --t2:#6b6860;
-  --t3:#a8a49c;
-  --green:#2a7a46;
-  --green-l:#e8f3ed;
-  --green-m:#9ecdb4;
-  --orange:#b85a18;
-  --orange-l:#fdf0e6;
-  --orange-m:#e8a870;
-  --blue:#1e5fa0;
-  --blue-l:#e6eef8;
-  --red:#a82828;
-  --nav-bg:#18181a;
-  --nav-b:#282828;
-  --nav-off:#585858;
-  --nav-on:#f5f5f3;
+  --black:#0a0a0a;
+  --black2:#111;
+  --black3:#1a1a1a;
+  --gray1:#242424;
+  --gray2:#2e2e2e;
+  --gray3:#3a3a3a;
+  --gray4:#555;
+  --gray5:#888;
+  --gray6:#bbb;
+  --white:#f5f4f0;
+  --white2:#e8e6e0;
+  --accent:#e8ff00;
+  --accent2:#c8dd00;
+  --red:#ff3b30;
+  --green:#00e676;
+  --orange:#ff6d00;
+  --blue:#448aff;
 }
-html,body{height:100%;background:var(--bg);overflow:hidden}
-body{font-family:'DM Sans',sans-serif;color:var(--t1)}
+html,body{height:100%;background:var(--black);overflow:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:'Barlow',sans-serif;color:var(--white)}
 
-.app{max-width:430px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;background:var(--bg);overflow:hidden}
+/* ── SHELL ── */
+.app{max-width:430px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;background:var(--black);overflow:hidden;position:relative}
 .screens{flex:1;overflow:hidden;position:relative}
-.screen{position:absolute;inset:0;overflow-y:auto;padding:env(safe-area-inset-top,32px) 18px 86px;display:none;animation:fadeUp .2s ease}
+.screen{position:absolute;inset:0;overflow-y:auto;display:none;padding:env(safe-area-inset-top,0) 0 76px}
 .screen.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.screen::-webkit-scrollbar{display:none}
 
-/* NAV */
-.nav{display:flex;justify-content:space-around;padding:10px 0 max(18px,env(safe-area-inset-bottom));background:var(--nav-bg);border-top:1px solid var(--nav-b);flex-shrink:0}
-.nb{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:var(--nav-off);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:.07em;text-transform:uppercase;padding:6px 14px;transition:color .15s}
-.nb.active{color:var(--nav-on)}
-.nb svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+/* ── ANIMATIONS ── */
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes countUp{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(400%)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px #e8ff0033}50%{box-shadow:0 0 40px #e8ff0066}}
 
-/* TYPE */
-.pt{font-size:28px;font-weight:300;letter-spacing:-.03em;color:var(--t1)}
-.ps{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.14em;margin-top:3px;margin-bottom:26px}
-.sl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
+.anim-up{animation:slideUp .4s cubic-bezier(.16,1,.3,1) both}
+.anim-up-1{animation:slideUp .4s .05s cubic-bezier(.16,1,.3,1) both}
+.anim-up-2{animation:slideUp .4s .1s cubic-bezier(.16,1,.3,1) both}
+.anim-up-3{animation:slideUp .4s .15s cubic-bezier(.16,1,.3,1) both}
+.anim-up-4{animation:slideUp .4s .2s cubic-bezier(.16,1,.3,1) both}
+.anim-up-5{animation:slideUp .4s .25s cubic-bezier(.16,1,.3,1) both}
 
-/* CARD */
-.card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:18px}
-.mt{margin-top:10px}.mt2{margin-top:22px}
+/* ── NAV ── */
+.nav{display:flex;justify-content:space-around;align-items:center;padding:12px 0 max(18px,env(safe-area-inset-bottom));background:var(--black2);border-top:1px solid var(--gray1);flex-shrink:0;position:relative;z-index:50}
+.nb{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;color:var(--gray4);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;transition:color .2s;position:relative}
+.nb.active{color:var(--accent)}
+.nb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.nb.active svg{transform:scale(1.1)}
+.nb-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);position:absolute;bottom:-2px;opacity:0;transition:opacity .2s}
+.nb.active .nb-dot{opacity:1}
 
-/* TIMER */
-.big-timer{font-family:'DM Mono',monospace;font-size:56px;font-weight:300;letter-spacing:-.03em;text-align:center;padding:22px 0 16px;color:var(--t1);transition:color .3s}
-.big-timer.on{color:var(--green)}
+/* ── TYPOGRAPHY ── */
+.hero-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-style:italic;letter-spacing:-.02em;line-height:1}
+.hero-label{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--gray5);font-size:11px}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray5)}
 
-/* STATS */
-.s3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px}
-.sv{background:var(--s2);border-radius:12px;padding:11px 8px;text-align:center}
-.sv-n{font-size:19px;font-weight:500;letter-spacing:-.02em;font-family:'DM Mono',monospace;color:var(--t1)}
-.sv-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+/* ── PAGE HEADER ── */
+.page-header{padding:32px 22px 20px}
+.page-kicker{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.page-h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-style:italic;font-size:52px;letter-spacing:-.01em;line-height:.95;text-transform:uppercase}
 
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:13px 22px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;border:none;white-space:nowrap}
-.btn-w{width:100%}
-.btn-p{background:var(--t1);color:#fff}.btn-p:active{opacity:.8}
-.btn-o{background:transparent;color:var(--t1);border:1.5px solid var(--b2)}.btn-o:active{background:var(--s2)}
-.btn-d{background:transparent;color:var(--red);border:1.5px solid #a8282830}.btn-d:active{background:#a8282810}
-.btn-s{padding:9px 17px;font-size:13px}
-.brow{display:flex;gap:10px}
+/* ── RUN SCREEN ── */
+.run-hero{background:var(--black2);margin:0 16px;border-radius:20px;padding:28px 24px;border:1px solid var(--gray1);position:relative;overflow:hidden}
+.run-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#e8ff0006 0%,transparent 60%);pointer-events:none}
+.run-timer-display{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-style:italic;font-size:80px;letter-spacing:-.03em;line-height:1;color:var(--white);transition:color .3s;text-align:left}
+.run-timer-display.on{color:var(--accent);text-shadow:0 0 40px #e8ff0044}
+.run-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--gray1);border-radius:12px;overflow:hidden;margin:20px 0 22px}
+.run-metric{background:var(--black3);padding:14px 12px;text-align:center}
+.run-metric-val{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.01em;color:var(--white)}
+.run-metric-lbl{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gray5);margin-top:2px}
 
-/* BARS */
-.bars{display:flex;align-items:flex-end;gap:5px;height:88px;overflow-x:auto;padding-bottom:2px}
-.bc{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:30px}
-.bbar{width:100%;border-radius:4px 4px 0 0;min-height:3px;transition:height .4s}
-.bl{font-size:9px;color:var(--t3)}
-.bv{font-size:9px;color:var(--t2);font-family:'DM Mono',monospace}
+/* RUN BUTTONS */
+.run-btns{display:flex;gap:10px}
+.btn-run-start{flex:1;height:52px;border-radius:50px;background:var(--accent);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;letter-spacing:.15em;text-transform:uppercase;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.btn-run-start:active{transform:scale(.97);background:var(--accent2)}
+.btn-run-stop{width:52px;height:52px;border-radius:50%;background:transparent;color:var(--red);border:1.5px solid var(--red);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.btn-run-stop:active{background:#ff3b3011}
 
-/* STREAK GRID */
-.sg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.sd{aspect-ratio:1;border-radius:5px;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--t3);font-family:'DM Mono',monospace;transition:all .2s}
-.sd.done{background:var(--green-l);border-color:var(--green-m);color:var(--green)}
-.sd.today{border-color:var(--b3)}
-.sd.done.today{border-color:var(--green)}
+/* STATS ROW */
+.stat-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 16px}
+.stat-card{background:var(--black2);border:1px solid var(--gray1);border-radius:16px;padding:16px 14px}
+.stat-card-n{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;letter-spacing:-.01em;line-height:1;color:var(--white)}
+.stat-card-l{font-size:10px;font-weight:500;color:var(--gray5);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
 
-/* FASTING RING */
-.ring-wrap{display:flex;justify-content:center;margin:6px 0 18px}
-.rc{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
-.rt{font-family:'DM Mono',monospace;font-size:33px;font-weight:300;color:var(--t1)}
-.rs{font-size:11px;color:var(--t3);margin-top:2px}
-.rp{font-size:17px;font-weight:500;margin-top:4px;color:var(--orange)}
+/* CHART CONTAINER */
+.chart-wrap{background:var(--black2);border:1px solid var(--gray1);border-radius:20px;padding:20px 16px 14px;margin:0 16px}
+.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
 
-/* JOURNAL */
-textarea{width:100%;background:var(--s2);border:1.5px solid var(--b1);border-radius:12px;color:var(--t1);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.75;padding:14px;resize:none;outline:none;-webkit-appearance:none;transition:border-color .2s}
-textarea:focus{border-color:var(--b3)}
-.je{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:16px;margin-bottom:8px;cursor:pointer}
-.je:active{border-color:var(--b2)}
-.jd{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
-.jp{font-size:14px;color:var(--t2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
-/* INPUTS */
-select{background:var(--s2);border:1.5px solid var(--b1);border-radius:10px;color:var(--t1);font-family:'DM Sans',sans-serif;font-size:14px;padding:9px 12px;outline:none;-webkit-appearance:none;cursor:pointer}
-input[type=number],input[type=text]{background:var(--s2);border:1.5px solid var(--b1);border-radius:12px;color:var(--t1);font-family:'DM Mono',monospace;font-size:16px;padding:11px 16px;outline:none;-webkit-appearance:none;transition:border-color .2s}
-input:focus,select:focus{border-color:var(--b3)}
+/* STREAK */
+.streak-hero{background:var(--black2);border:1px solid var(--gray1);border-radius:20px;padding:22px;margin:0 16px}
+.streak-num-big{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-style:italic;font-size:72px;letter-spacing:-.03em;line-height:1;color:var(--accent)}
+.streak-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:16px}
+.sd{aspect-ratio:1;border-radius:6px;background:var(--gray1);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;color:var(--gray4);transition:all .2s}
+.sd.done{background:#e8ff0020;color:var(--accent);border:1px solid #e8ff0040}
+.sd.today{border:1px solid var(--gray4)}
+.sd.done.today{border-color:var(--accent)}
 
 /* BADGES */
-.badge{display:inline-flex;align-items:center;gap:6px;background:var(--s2);color:var(--t2);font-size:12px;padding:5px 12px;border-radius:50px;border:1px solid var(--b1)}
-.badge svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.badge-row{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--black2);border:1px solid var(--gray2);border-radius:50px;padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray6)}
+.badge svg{width:13px;height:13px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.badge.earned{border-color:var(--accent);color:var(--accent);background:#e8ff0010}
 
-/* HABIT CHECK */
-.hcheck{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--b2);background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.hcheck svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .15s}
-.hcheck.on{background:var(--green);border-color:var(--green)}.hcheck.on svg{opacity:1}
+/* SECTION DIVIDER */
+.sdiv{padding:24px 22px 12px}
 
-/* HABIT ICON BOX */
-.hibx{width:38px;height:38px;border-radius:10px;background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.hibx svg{width:18px;height:18px;stroke:var(--t2);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* ── HABITS ── */
+.habit-card{background:var(--black2);border:1px solid var(--gray1);border-radius:16px;padding:18px 18px;margin:0 16px 10px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;transition:border-color .2s}
+.habit-card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gray2);border-radius:0 2px 2px 0;transition:background .2s}
+.habit-card.done-today::after{background:var(--accent)}
+.habit-icon-box{width:42px;height:42px;border-radius:12px;background:var(--gray1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.habit-icon-box svg{width:20px;height:20px;stroke:var(--gray5);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
+.habit-card.done-today .habit-icon-box{background:#e8ff0015}
+.habit-card.done-today .habit-icon-box svg{stroke:var(--accent)}
+.habit-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;letter-spacing:.04em;text-transform:uppercase;color:var(--white)}
+.habit-streak-lbl{font-size:12px;color:var(--gray5);margin-top:2px}
+.habit-streak-lbl span{color:var(--accent);font-weight:600}
+.hcheck{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--gray3);background:none;cursor:pointer;flex-shrink:0;margin-left:auto;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.hcheck svg{width:13px;height:13px;stroke:#000;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .15s}
+.hcheck.on{background:var(--accent);border-color:var(--accent)}.hcheck.on svg{opacity:1}
 
-/* MODAL */
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.28);display:flex;align-items:flex-end;justify-content:center;z-index:100;animation:fadeUp .2s}
-.mo{background:var(--s1);border:1px solid var(--b1);border-top:none;border-radius:22px 22px 0 0;padding:26px 22px max(38px,env(safe-area-inset-bottom));width:100%;max-width:430px;max-height:88dvh;overflow-y:auto}
-.mo-t{font-size:18px;font-weight:500;margin-bottom:18px;color:var(--t1)}
-.mcl{float:right;background:none;border:none;color:var(--t3);font-size:26px;cursor:pointer;line-height:1;margin-top:-4px}
+/* CAL */
+.cal-wrap{background:var(--black2);border:1px solid var(--gray1);border-radius:20px;padding:20px;margin:0 16px}
+.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cal-month{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:.1em;text-transform:uppercase}
+.cal-nav{background:none;border:none;color:var(--gray5);font-size:20px;cursor:pointer;padding:4px 10px;transition:color .15s}
+.cal-nav:hover{color:var(--white)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cd{aspect-ratio:1;border-radius:6px;background:var(--gray1);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;color:var(--gray4);transition:all .2s}
+.cd.done{background:#e8ff0018;color:var(--accent)}
+.cd.today{outline:1px solid var(--gray4)}
+.cd.done.today{outline-color:var(--accent)}
+.hab-filter-row{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px;margin-bottom:14px}
+.hab-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:50px;border:1px solid var(--gray2);background:transparent;color:var(--gray5);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.hab-pill.active{background:#e8ff0015;border-color:var(--accent);color:var(--accent)}
+.hab-pill svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── HEALTH ── */
+.weight-hero{background:var(--black2);border:1px solid var(--gray1);border-radius:20px;padding:26px 22px;margin:0 16px;position:relative;overflow:hidden}
+.weight-hero::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#448aff08,transparent 70%)}
+.weight-big{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-style:italic;font-size:88px;letter-spacing:-.04em;line-height:.9;color:var(--white)}
+.weight-unit{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:22px;color:var(--gray5);margin-left:4px;vertical-align:super}
+.weight-trend{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;margin-top:6px}
+.trend-down{color:var(--green)}.trend-up{color:var(--red)}.trend-same{color:var(--gray5)}
+.progress-track{height:3px;background:var(--gray1);border-radius:2px;margin-top:16px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;background:var(--accent);transition:width .8s cubic-bezier(.16,1,.3,1)}
+.input-row{display:flex;gap:10px;align-items:center;padding:0 16px}
+.ni{flex:1;background:var(--black2);border:1px solid var(--gray2);border-radius:12px;color:var(--white);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:20px;letter-spacing:.04em;padding:14px 16px;outline:none;-webkit-appearance:none;transition:border-color .2s}
+.ni:focus{border-color:var(--accent)}
+.ni::placeholder{color:var(--gray4)}
+.btn-save{background:var(--accent);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:.15em;text-transform:uppercase;border:none;border-radius:12px;padding:14px 20px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.btn-save:active{background:var(--accent2);transform:scale(.97)}
+.btn-save-o{background:transparent;color:var(--white);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.15em;text-transform:uppercase;border:1px solid var(--gray2);border-radius:12px;padding:14px 20px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.btn-save-o:active{background:var(--gray1)}
+
+/* ── FAST ── */
+.fast-ring-wrap{display:flex;justify-content:center;padding:10px 0 24px}
+.fast-ring-inner{position:relative;width:220px;height:220px}
+.fast-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.fast-time-big{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-style:italic;font-size:46px;letter-spacing:-.02em;line-height:1;color:var(--white)}
+.fast-sub{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray5);margin-top:4px}
+.fast-pct-lbl{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:var(--orange);margin-top:4px}
+.proto-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:0 16px;margin-bottom:18px}
+.proto-btn{padding:9px 16px;border-radius:8px;border:1px solid var(--gray2);background:transparent;color:var(--gray5);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.1em;cursor:pointer;transition:all .2s}
+.proto-btn.on{background:#ff6d0015;border-color:var(--orange);color:var(--orange)}
+.fast-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--gray1);border-radius:16px;overflow:hidden;margin:0 16px 18px}
+.fast-stat{background:var(--black3);padding:16px 10px;text-align:center}
+.fast-stat-n{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;color:var(--white)}
+.fast-stat-l{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray5);margin-top:3px}
+.btn-fast-main{display:block;width:calc(100% - 32px);margin:0 16px;height:56px;border-radius:14px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;transition:all .15s}
+.btn-fast-main.start{background:var(--accent);color:var(--black)}
+.btn-fast-main.stop{background:transparent;color:var(--red);border:1.5px solid var(--red)}
+.btn-fast-main:active{transform:scale(.98);opacity:.9}
+.fast-hist-item{background:var(--black2);border:1px solid var(--gray1);border-radius:14px;padding:16px 18px;margin:0 16px 8px;display:flex;align-items:center;justify-content:space-between}
+.fhi-date{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+.fhi-sub{font-size:12px;color:var(--gray5);margin-top:2px}
+.fhi-status{display:flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.fhi-status svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── JOURNAL ── */
+.journal-prompt{background:var(--black2);border:1px solid var(--gray1);border-radius:20px;padding:22px;margin:0 16px}
+.journal-date-lbl{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+textarea.jta{width:100%;background:var(--gray1);border:1px solid var(--gray2);border-radius:12px;color:var(--white);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.75;padding:16px;resize:none;outline:none;-webkit-appearance:none;transition:border-color .2s;min-height:120px}
+textarea.jta:focus{border-color:var(--gray3)}
+textarea.jta::placeholder{color:var(--gray4)}
+.journal-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.j-wc{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray5)}
+.j-actions{display:flex;gap:8px;align-items:center}
+select.mood-sel{background:var(--gray1);border:1px solid var(--gray2);border-radius:8px;color:var(--white);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:.06em;padding:9px 12px;outline:none;-webkit-appearance:none;cursor:pointer}
+.je-card{background:var(--black2);border:1px solid var(--gray1);border-radius:16px;padding:18px;margin:0 16px 10px;cursor:pointer;transition:border-color .2s;position:relative;overflow:hidden}
+.je-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gray2)}
+.je-card:active{border-color:var(--gray3)}
+.je-date{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray5);margin-bottom:6px}
+.je-preview{font-size:14px;color:var(--gray6);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.je-mood-badge{display:inline-block;background:var(--gray1);border-radius:4px;padding:2px 8px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray5);margin-bottom:8px}
+
+/* ── MODAL ── */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:flex-end;justify-content:center;z-index:200;animation:fadeIn .2s}
+.mo{background:var(--black2);border:1px solid var(--gray1);border-radius:24px 24px 0 0;padding:28px 22px max(40px,env(safe-area-inset-bottom));width:100%;max-width:430px;max-height:88dvh;overflow-y:auto}
+.mo-handle{width:36px;height:4px;border-radius:2px;background:var(--gray2);margin:0 auto 22px}
+.mo-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-style:italic;font-size:28px;text-transform:uppercase;margin-bottom:20px}
+.ni-text{width:100%;background:var(--gray1);border:1px solid var(--gray2);border-radius:12px;color:var(--white);font-family:'Barlow',sans-serif;font-size:16px;padding:14px 16px;outline:none;margin-bottom:14px;-webkit-appearance:none;transition:border-color .2s}
+.ni-text:focus{border-color:var(--accent)}
+.ni-text::placeholder{color:var(--gray4)}
+.icon-picker{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
+.ipbtn{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--gray1);border:1.5px solid transparent;border-radius:12px;padding:10px 6px;cursor:pointer;transition:all .15s}
+.ipbtn.sel{border-color:var(--accent);background:#e8ff0010}
+.ipbtn svg{width:20px;height:20px;stroke:var(--gray5);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ipbtn.sel svg{stroke:var(--accent)}
+.ipbtn span{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.08em;color:var(--gray5);text-transform:uppercase}
+.ipbtn.sel span{color:var(--accent)}
+.btn-modal-cta{width:100%;height:52px;border-radius:12px;background:var(--accent);color:var(--black);font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;transition:all .15s}
+.btn-modal-cta:active{background:var(--accent2)}
 
 /* MISC */
-.pbar{height:4px;background:var(--s2);border-radius:2px;overflow:hidden}
-.pfill{height:100%;border-radius:2px;transition:width .6s}
-.row{display:flex;align-items:center}.jb{justify-content:space-between}
+.sp{height:1px;background:var(--gray1);margin:20px 16px}
+.text-accent{color:var(--accent)}
+.text-green{color:var(--green)}
+.text-red{color:var(--red)}
+.text-orange{color:var(--orange)}
+.text-dim{color:var(--gray5)}
+.text-muted{color:var(--gray4)}
+.row{display:flex;align-items:center}
+.jb{justify-content:space-between}
 .gap{gap:10px}.gap2{gap:8px}
-.tg{color:var(--green)}.to{color:var(--orange)}.tb{color:var(--blue)}.tr{color:var(--red)}.t2{color:var(--t2)}.t3{color:var(--t3)}
+.empty-state{text-align:center;padding:40px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray4)}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="screens">
 
-    <!-- CORRER -->
+    <!-- ═══════════════ RUN ═══════════════ -->
     <div class="screen active" id="s-run">
-      <div class="pt" id="run-greeting">Buenos días</div>
-      <div class="ps">Tracker de carrera</div>
-      <div class="card">
-        <div class="big-timer" id="run-timer">00:00:00</div>
-        <div class="s3">
-          <div class="sv"><div class="sv-n" id="rn-km">0.0</div><div class="sv-l">km</div></div>
-          <div class="sv"><div class="sv-n" id="rn-pace">--:--</div><div class="sv-l">min/km</div></div>
-          <div class="sv"><div class="sv-n" id="rn-cal">0</div><div class="sv-l">kcal</div></div>
+      <div class="page-header anim-up">
+        <div class="page-kicker" id="run-kicker">Listo para correr</div>
+        <div class="page-h1" id="run-greeting">Buenos<br>Días</div>
+      </div>
+
+      <div class="run-hero anim-up-1">
+        <div class="run-timer-display" id="run-timer">00:00:00</div>
+        <div class="run-metrics">
+          <div class="run-metric"><div class="run-metric-val" id="rn-km">0.0</div><div class="run-metric-lbl">km</div></div>
+          <div class="run-metric"><div class="run-metric-val" id="rn-pace">--:--</div><div class="run-metric-lbl">min/km</div></div>
+          <div class="run-metric"><div class="run-metric-val" id="rn-cal">0</div><div class="run-metric-lbl">kcal</div></div>
         </div>
-        <div class="brow">
-          <button class="btn btn-p" id="run-btn" style="flex:2" onclick="toggleRun()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Iniciar
+        <div class="run-btns">
+          <button class="btn-run-start" id="run-btn" onclick="toggleRun()">
+            <svg id="run-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span id="run-btn-txt">Iniciar</span>
           </button>
-          <button class="btn btn-o" id="run-stop" style="flex:1;display:none" onclick="stopRun()">Terminar</button>
+          <button class="btn-run-stop" id="run-stop" style="display:none" onclick="stopRun()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          </button>
         </div>
       </div>
 
-      <div class="mt2"><div class="sl">Tendencia de km recorridos</div>
-        <div class="card" style="padding:14px 12px 10px">
-          <canvas id="km-chart" height="118"></canvas>
-          <div id="km-empty" style="text-align:center;padding:28px;font-size:14px;color:var(--t3);display:none">Sin sesiones aún</div>
-        </div>
+      <div class="sdiv anim-up-2"><div class="section-title">Tendencia — km recorridos</div></div>
+      <div class="chart-wrap anim-up-2">
+        <canvas id="km-chart" height="110"></canvas>
+        <div id="km-empty" class="empty-state" style="display:none;padding:20px">Sin sesiones aún</div>
       </div>
 
-      <div class="mt2"><div class="sl">Tiempo por sesión (min)</div>
-        <div class="card"><div class="bars" id="run-bars"></div></div>
+      <div class="sdiv anim-up-3"><div class="section-title">Tiempo por sesión</div></div>
+      <div class="chart-wrap anim-up-3" style="padding:16px 12px 10px">
+        <div style="display:flex;align-items:flex-end;gap:5px;height:80px;overflow-x:auto" id="run-bars"></div>
       </div>
 
-      <div class="mt2"><div class="sl">Racha de carrera</div>
-        <div class="card">
-          <div class="row jb" style="margin-bottom:14px">
-            <div>
-              <div style="font-size:36px;font-weight:300;font-family:'DM Mono',monospace;color:var(--t1)" id="run-streak-n">0</div>
-              <div class="t3" style="font-size:11px;margin-top:2px">días consecutivos</div>
-            </div>
-            <div style="width:44px;height:44px;border-radius:12px;background:var(--orange-l);display:flex;align-items:center;justify-content:center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
-          </div>
-          <div class="sg" id="run-sgrid"></div>
-        </div>
-      </div>
-
-      <div class="mt2"><div class="sl">Logros</div>
-        <div class="badges" id="run-badges"></div>
-      </div>
-    </div>
-
-    <!-- HABITOS -->
-    <div class="screen" id="s-habits">
-      <div class="pt">Hábitos</div>
-      <div class="ps">Racha & calendario</div>
-      <div id="habits-list"></div>
-      <button class="btn btn-o btn-w mt" style="margin-top:12px" onclick="openModal('add-modal')">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Agregar hábito
-      </button>
-      <div class="mt2"><div class="sl">Calendario de hábito</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px" id="hab-filter"></div>
-        <div class="card">
-          <div class="row jb" style="margin-bottom:13px">
-            <button onclick="chMonth(-1)" style="background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;padding:4px 10px">‹</button>
-            <div style="font-size:14px;font-weight:500" id="cal-label"></div>
-            <button onclick="chMonth(1)" style="background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;padding:4px 10px">›</button>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:5px" id="cal-dow"></div>
-          <div class="sg" id="hab-cal" style="gap:3px"></div>
-          <div class="row jb" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--b1)">
-            <span class="t3" style="font-size:12px">Racha actual</span>
-            <div class="row gap2">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              <span style="font-size:16px;font-weight:500" id="hab-streak-n">0 días</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SALUD -->
-    <div class="screen" id="s-health">
-      <div class="pt">Salud</div>
-      <div class="ps">Peso & tendencia</div>
-      <div class="card">
-        <div class="row jb" style="margin-bottom:13px">
+      <div class="sdiv anim-up-4"><div class="section-title">Racha de carrera</div></div>
+      <div class="streak-hero anim-up-4">
+        <div class="row jb">
           <div>
-            <div style="font-size:42px;font-weight:300;letter-spacing:-.04em;font-family:'DM Mono',monospace" id="w-cur">--</div>
-            <div class="t3" style="font-size:11px;margin-top:2px">kilogramos actuales</div>
+            <div class="streak-num-big" id="run-streak-n">0</div>
+            <div class="hero-label" style="margin-top:2px">Días consecutivos</div>
           </div>
-          <div id="w-arrow" style="font-size:36px;font-family:'DM Mono',monospace;font-weight:300"></div>
+          <div style="text-align:right">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray5)">Mejor racha</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;color:var(--white)" id="run-best-streak">0</div>
+          </div>
         </div>
-        <div class="pbar"><div class="pfill" id="w-prog" style="width:0%;background:var(--blue)"></div></div>
-        <div class="row jb" style="margin-top:8px">
-          <span class="t3" style="font-size:11px" id="w-goal-lbl">Meta: no establecida</span>
-          <span class="t3" style="font-size:11px" id="w-diff-lbl"></span>
-        </div>
+        <div class="streak-grid" id="run-sgrid"></div>
       </div>
-      <div class="mt"><div class="sl">Registrar peso</div>
-        <div class="card row gap"><input type="number" id="w-input" placeholder="75.5" step="0.1" style="flex:1"><button class="btn btn-p btn-s" onclick="logWeight()">Guardar</button></div>
-      </div>
-      <div class="mt"><div class="sl">Meta de peso</div>
-        <div class="card row gap"><input type="number" id="wg-input" placeholder="70" step="0.5" style="flex:1"><button class="btn btn-o btn-s" onclick="setWGoal()">Guardar</button></div>
-      </div>
-      <div class="mt2"><div class="sl">Tendencia — historial</div>
-        <div class="card" style="padding:14px 12px 10px">
-          <canvas id="w-chart" height="140"></canvas>
-          <div id="w-empty" style="text-align:center;padding:30px;font-size:14px;color:var(--t3)">Registra tu peso para ver la tendencia</div>
-        </div>
-      </div>
+
+      <div class="sdiv anim-up-5"><div class="section-title">Logros</div></div>
+      <div class="badge-row anim-up-5" id="run-badges" style="padding-bottom:4px"></div>
+      <div style="height:20px"></div>
     </div>
 
-    <!-- AYUNO -->
+    <!-- ═══════════════ HABITS ═══════════════ -->
+    <div class="screen" id="s-habits">
+      <div class="page-header anim-up">
+        <div class="page-kicker">Sistema de hábitos</div>
+        <div class="page-h1">Hábitos</div>
+      </div>
+      <div id="habits-list"></div>
+      <div style="padding:0 16px;margin-top:2px">
+        <button onclick="openModal('add-modal')" style="width:100%;height:48px;border-radius:12px;background:transparent;color:var(--gray5);border:1px dashed var(--gray2);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s" id="add-habit-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar hábito
+        </button>
+      </div>
+
+      <div class="sdiv"><div class="section-title">Calendario</div></div>
+      <div class="hab-filter-row" id="hab-filter"></div>
+      <div class="cal-wrap">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="chMonth(-1)">‹</button>
+          <div class="cal-month" id="cal-label"></div>
+          <button class="cal-nav" onclick="chMonth(1)">›</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:6px">
+          <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.15em;color:var(--gray4);padding:3px 0">L</div>
+          <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.15em;color:var(--gray4);padding:3px 0">M</div>
+          <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.15em;color:var(--gray4);padding:3px 0">X</div>
+          <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.15em;color:var(--gray4);padding:3px 0">J</div>
+          <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.15em;color:var(--gray4);padding:3px 0">V</div>
+          <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.15em;color:var(--gray4);padding:3px 0">S</div>
+          <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;letter-spacing:.15em;color:var(--gray4);padding:3px 0">D</div>
+        </div>
+        <div class="cal-grid" id="hab-cal" style="gap:4px"></div>
+        <div class="row jb" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--gray1)">
+          <div>
+            <div class="section-title">Racha actual</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;color:var(--accent);margin-top:2px" id="hab-streak-n">0</div>
+          </div>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- ═══════════════ HEALTH ═══════════════ -->
+    <div class="screen" id="s-health">
+      <div class="page-header anim-up">
+        <div class="page-kicker">Tu cuerpo</div>
+        <div class="page-h1">Salud</div>
+      </div>
+
+      <div class="weight-hero anim-up-1">
+        <div class="section-title" style="margin-bottom:10px">Peso actual</div>
+        <div>
+          <span class="weight-big" id="w-cur">--</span><span class="weight-unit" id="w-unit">kg</span>
+        </div>
+        <div class="weight-trend" id="w-trend"></div>
+        <div class="row jb" style="margin-top:12px">
+          <div class="section-title">Meta: <span id="w-goal-val" style="color:var(--white)">--</span> kg</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px" id="w-diff"></div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="w-prog" style="width:0%"></div></div>
+      </div>
+
+      <div class="sdiv anim-up-2"><div class="section-title">Registrar peso</div></div>
+      <div class="input-row anim-up-2">
+        <input type="number" class="ni" id="w-input" placeholder="75.5" step="0.1">
+        <button class="btn-save" onclick="logWeight()">Guardar</button>
+      </div>
+
+      <div class="sdiv anim-up-2"><div class="section-title">Meta de peso</div></div>
+      <div class="input-row anim-up-2">
+        <input type="number" class="ni" id="wg-input" placeholder="70" step="0.5">
+        <button class="btn-save-o" onclick="setWGoal()">Guardar</button>
+      </div>
+
+      <div class="sdiv anim-up-3"><div class="section-title">Tendencia — historial</div></div>
+      <div class="chart-wrap anim-up-3" style="padding:16px 12px 10px">
+        <canvas id="w-chart" height="140"></canvas>
+        <div id="w-empty" class="empty-state">Registra tu primer peso</div>
+      </div>
+
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- ═══════════════ FAST ═══════════════ -->
     <div class="screen" id="s-fast">
-      <div class="pt">Ayuno</div>
-      <div class="ps">Intermitente</div>
-      <div class="card" style="text-align:center">
-        <div class="ring-wrap">
-          <div style="position:relative;width:208px;height:208px">
-            <svg width="208" height="208" viewBox="0 0 208 208" style="transform:rotate(-90deg)">
-              <circle cx="104" cy="104" r="88" fill="none" stroke="var(--s2)" stroke-width="10"/>
-              <circle cx="104" cy="104" r="88" fill="none" stroke="var(--orange)" stroke-width="10"
-                stroke-dasharray="552.9" id="fast-ring" stroke-dashoffset="552.9"
-                stroke-linecap="round" style="transition:stroke-dashoffset .6s ease"/>
-            </svg>
-            <div class="rc"><div class="rt" id="fast-timer">00:00</div><div class="rs" id="fast-sub">en ayuno</div><div class="rp" id="fast-pct">0%</div></div>
+      <div class="page-header anim-up">
+        <div class="page-kicker">Ayuno intermitente</div>
+        <div class="page-h1">Ventana<br>de ayuno</div>
+      </div>
+
+      <div class="fast-ring-wrap anim-up-1">
+        <div class="fast-ring-inner">
+          <svg width="220" height="220" viewBox="0 0 220 220" style="transform:rotate(-90deg)">
+            <circle cx="110" cy="110" r="96" fill="none" stroke="#1a1a1a" stroke-width="8"/>
+            <circle cx="110" cy="110" r="96" fill="none" stroke="var(--orange)" stroke-width="8"
+              stroke-dasharray="603.2" id="fast-ring" stroke-dashoffset="603.2"
+              stroke-linecap="round" style="transition:stroke-dashoffset .8s cubic-bezier(.16,1,.3,1)"/>
+          </svg>
+          <div class="fast-center">
+            <div class="fast-time-big" id="fast-timer">00:00</div>
+            <div class="fast-sub" id="fast-sub">en ayuno</div>
+            <div class="fast-pct-lbl" id="fast-pct">0%</div>
           </div>
         </div>
-        <div class="s3" style="margin-bottom:16px">
-          <div class="sv"><div class="sv-n" id="fast-goal-v">16</div><div class="sv-l">meta hrs</div></div>
-          <div class="sv"><div class="sv-n" id="fast-el-v">0.0</div><div class="sv-l">hrs ayuno</div></div>
-          <div class="sv"><div class="sv-n" id="fast-stk-v">0</div><div class="sv-l">racha</div></div>
-        </div>
-        <div style="display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
-          <span class="t3" style="font-size:12px;align-self:center">Protocolo:</span>
-          <button id="fg-12" class="btn btn-o btn-s" onclick="setFG(12)">12h</button>
-          <button id="fg-14" class="btn btn-o btn-s" onclick="setFG(14)">14h</button>
-          <button id="fg-16" class="btn btn-o btn-s" onclick="setFG(16)">16h</button>
-          <button id="fg-18" class="btn btn-o btn-s" onclick="setFG(18)">18h</button>
-          <button id="fg-20" class="btn btn-o btn-s" onclick="setFG(20)">20h</button>
-        </div>
-        <button class="btn btn-p btn-w" id="fast-btn" onclick="toggleFast()">Iniciar ayuno</button>
-        <div class="t3" style="font-size:12px;margin-top:10px" id="fast-start-lbl"></div>
       </div>
-      <div class="mt2"><div class="sl">Historial reciente</div><div id="fast-hist"></div></div>
+
+      <div class="fast-stats anim-up-2">
+        <div class="fast-stat"><div class="fast-stat-n" id="fast-goal-v">16</div><div class="fast-stat-l">meta hrs</div></div>
+        <div class="fast-stat"><div class="fast-stat-n" id="fast-el-v">0.0</div><div class="fast-stat-l">hrs ayuno</div></div>
+        <div class="fast-stat"><div class="fast-stat-n" id="fast-stk-v">0</div><div class="fast-stat-l">racha</div></div>
+      </div>
+
+      <div class="sdiv anim-up-2"><div class="section-title">Protocolo</div></div>
+      <div class="proto-row anim-up-2">
+        <button id="fg-12" class="proto-btn" onclick="setFG(12)">12:12</button>
+        <button id="fg-14" class="proto-btn" onclick="setFG(14)">14:10</button>
+        <button id="fg-16" class="proto-btn" onclick="setFG(16)">16:8</button>
+        <button id="fg-18" class="proto-btn" onclick="setFG(18)">18:6</button>
+        <button id="fg-20" class="proto-btn" onclick="setFG(20)">20:4</button>
+      </div>
+
+      <button class="btn-fast-main start anim-up-3" id="fast-btn" onclick="toggleFast()">Iniciar ayuno</button>
+      <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray5);margin-top:10px" id="fast-start-lbl"></div>
+
+      <div class="sdiv anim-up-4"><div class="section-title">Historial</div></div>
+      <div id="fast-hist"></div>
+      <div style="height:20px"></div>
     </div>
 
-    <!-- DIARIO -->
+    <!-- ═══════════════ JOURNAL ═══════════════ -->
     <div class="screen" id="s-journal">
-      <div class="pt">Diario</div>
-      <div class="ps">Pensamientos & reflexión</div>
-      <div class="card">
-        <div class="t3" style="font-size:10px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.12em" id="j-today-lbl"></div>
-        <textarea id="j-input" rows="6" placeholder="¿Qué tienes en mente hoy?&#10;&#10;Reflexiona sobre tus metas, gratitud, o lo que sientes..."></textarea>
-        <div class="row jb" style="margin-top:11px">
-          <span class="t3" style="font-size:12px" id="j-wc">0 palabras</span>
-          <div class="row gap2">
-            <select id="j-mood"><option value="">estado</option><option value="En flujo">En flujo</option><option value="Tranquilo">Tranquilo</option><option value="Reflexivo">Reflexivo</option><option value="Inquieto">Inquieto</option><option value="Difícil">Difícil</option></select>
-            <button class="btn btn-p btn-s" onclick="saveJournal()">Guardar</button>
+      <div class="page-header anim-up">
+        <div class="page-kicker">Reflexión diaria</div>
+        <div class="page-h1">Diario</div>
+      </div>
+
+      <div class="journal-prompt anim-up-1">
+        <div class="journal-date-lbl" id="j-today-lbl"></div>
+        <textarea class="jta" id="j-input" rows="5" placeholder="¿Qué tienes en mente hoy?&#10;&#10;Reflexiona. Escribe sin filtros."></textarea>
+        <div class="journal-bottom">
+          <div class="j-wc" id="j-wc">0 palabras</div>
+          <div class="j-actions">
+            <select class="mood-sel" id="j-mood">
+              <option value="">Estado</option>
+              <option value="En flujo">En flujo</option>
+              <option value="Tranquilo">Tranquilo</option>
+              <option value="Reflexivo">Reflexivo</option>
+              <option value="Inquieto">Inquieto</option>
+              <option value="Difícil">Difícil</option>
+            </select>
+            <button class="btn-save" onclick="saveJournal()">Guardar</button>
           </div>
         </div>
       </div>
-      <div class="mt2"><div class="sl">Entradas anteriores</div><div id="j-entries"></div></div>
+
+      <div class="sdiv anim-up-2"><div class="section-title">Entradas anteriores</div></div>
+      <div id="j-entries"></div>
+      <div style="height:20px"></div>
     </div>
 
   </div>
 
+  <!-- NAV -->
   <nav class="nav">
     <button class="nb active" id="nb-run" onclick="goTo('run')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-5"/></svg>
-      <span>Correr</span>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="2"/><path d="M5 20l2-5 3 2 2-4 4 7"/><path d="M16 6l-2 4-3-1-2 3"/></svg>
+      <span>Correr</span><div class="nb-dot"></div>
     </button>
     <button class="nb" id="nb-habits" onclick="goTo('habits')">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      <span>Hábitos</span>
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span>Hábitos</span><div class="nb-dot"></div>
     </button>
     <button class="nb" id="nb-health" onclick="goTo('health')">
       <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      <span>Salud</span>
+      <span>Salud</span><div class="nb-dot"></div>
     </button>
     <button class="nb" id="nb-fast" onclick="goTo('fast')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-      <span>Ayuno</span>
+      <span>Ayuno</span><div class="nb-dot"></div>
     </button>
     <button class="nb" id="nb-journal" onclick="goTo('journal')">
       <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      <span>Diario</span>
+      <span>Diario</span><div class="nb-dot"></div>
     </button>
   </nav>
 </div>
@@ -341,27 +493,27 @@ input:focus,select:focus{border-color:var(--b3)}
 <!-- ADD HABIT MODAL -->
 <div class="ov" id="add-modal" style="display:none" onclick="if(event.target===this)closeModal('add-modal')">
   <div class="mo">
-    <button class="mcl" onclick="closeModal('add-modal')">×</button>
-    <div class="mo-t">Nuevo hábito</div>
-    <input type="text" id="h-name" placeholder="Ej: Meditación, Leer, Ejercicio..." style="width:100%;margin-bottom:14px;font-family:'DM Sans',sans-serif">
-    <div class="sl" style="margin-bottom:10px">Icono</div>
-    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px" id="h-icons"></div>
-    <button class="btn btn-p btn-w" onclick="addHabit()">Agregar hábito</button>
+    <div class="mo-handle"></div>
+    <div class="mo-title">Nuevo hábito</div>
+    <input type="text" class="ni-text" id="h-name" placeholder="Nombre del hábito...">
+    <div class="section-title" style="margin-bottom:10px">Icono</div>
+    <div class="icon-picker" id="h-icons"></div>
+    <button class="btn-modal-cta" onclick="addHabit()">Agregar hábito</button>
   </div>
 </div>
 
-<!-- JOURNAL VIEW -->
+<!-- JOURNAL VIEW MODAL -->
 <div class="ov" id="j-modal" style="display:none" onclick="if(event.target===this)closeModal('j-modal')">
   <div class="mo">
-    <button class="mcl" onclick="closeModal('j-modal')">×</button>
-    <div class="t3" style="font-size:10px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px" id="jm-date"></div>
-    <div class="t2" style="font-size:12px;margin-bottom:14px" id="jm-mood"></div>
-    <div style="font-size:15px;line-height:1.85;color:var(--t2)" id="jm-text"></div>
+    <div class="mo-handle"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray5);margin-bottom:6px" id="jm-date"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:16px" id="jm-mood"></div>
+    <div style="font-size:16px;line-height:1.85;color:var(--gray6)" id="jm-text"></div>
   </div>
 </div>
 
 <script>
-// ICON LIBRARY
+// ICONS
 const ICONS=[
   {id:'mind',  l:'Mente',    s:'<circle cx="12" cy="12" r="9"/><path d="M9 9h.01M15 9h.01"/><path d="M9 13s1 2 3 2 3-2 3-2"/>'},
   {id:'book',  l:'Lectura',  s:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'},
@@ -374,30 +526,24 @@ const ICONS=[
   {id:'music', l:'Música',   s:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>'},
   {id:'plant', l:'Planta',   s:'<path d="M12 22V12"/><path d="M12 12C12 8 8 5 4 6c0 4 3 7 8 6"/><path d="M12 12c0-4 4-7 8-6 0 4-3 7-8 6"/>'},
   {id:'pill',  l:'Vitaminas',s:'<path d="M10.5 20.5L3.5 13.5a4.95 4.95 0 0 1 7-7l7 7a4.95 4.95 0 0 1-7 7z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>'},
-  {id:'walk',  l:'Caminar',  s:'<circle cx="12" cy="5" r="1"/><path d="M9 20l1-5-2-3 3-4 2 4h3"/><path d="M6 20h4"/><path d="M15 11l1 4-2 5"/>'}
+  {id:'walk',  l:'Caminar',  s:'<circle cx="12" cy="5" r="1"/><path d="M9 20l1-5-2-3 3-4 2 4h3"/><path d="M6 20h4"/>'}
 ];
 const iconSVG=id=>{const x=ICONS.find(i=>i.id===id);return x?x.s:ICONS[0].s;};
 
-// Build icon picker
 document.getElementById('h-icons').innerHTML=ICONS.map((ic,i)=>
-  `<button onclick="pickIcon(this,'${ic.id}')" data-icon="${ic.id}" class="ibt" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--s2);border:1.5px solid ${i===4?'var(--t1)':'var(--b1)'};border-radius:12px;padding:10px 6px;cursor:pointer;transition:border-color .15s">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ic.s}</svg>
-    <span style="font-size:9px;color:var(--t3)">${ic.l}</span>
+  `<button onclick="pickIcon(this,'${ic.id}')" data-icon="${ic.id}" class="ipbtn${i===4?' sel':''}">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ic.s}</svg>
+    <span>${ic.l}</span>
   </button>`
 ).join('');
 
-// DOW headers
-document.getElementById('cal-dow').innerHTML=['L','M','X','J','V','S','D'].map(d=>
-  `<div style="text-align:center;font-size:9px;color:var(--t3);padding:3px 0">${d}</div>`
-).join('');
-
 // PERSISTENCE
-const KEY='vida_v3';
+const KEY='vida_v4';
 const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{};}catch{return {};}};
 const persist=d=>{try{localStorage.setItem(KEY,JSON.stringify(d));}catch{}};
 
 let D=load();
-if(!D.run)    D.run    ={sessions:[],streak:0};
+if(!D.run)    D.run    ={sessions:[],streak:0,bestStreak:0};
 if(!D.habits) D.habits ={list:[],selId:null,calMo:new Date().getMonth(),calYr:new Date().getFullYear()};
 if(!D.health) D.health ={weights:[],goal:null};
 if(!D.fast)   D.fast   ={active:false,startMs:null,goalH:16,history:[],streak:0};
@@ -406,21 +552,27 @@ if(!D.journal)D.journal={entries:[]};
 const today=()=>new Date().toISOString().split('T')[0];
 const dAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().split('T')[0];};
 
+// SEED DATA
 if(!D.run.sessions.length){
-  D.run.sessions=[{date:dAgo(13),dur:1560,km:2.8},{date:dAgo(11),dur:1980,km:3.5},{date:dAgo(9),dur:2400,km:4.2},{date:dAgo(7),dur:2100,km:3.8},{date:dAgo(5),dur:2700,km:4.8},{date:dAgo(3),dur:2880,km:5.1},{date:dAgo(1),dur:3000,km:5.3}];
-  D.run.streak=4;
+  D.run.sessions=[{date:dAgo(20),dur:1320,km:2.4},{date:dAgo(17),dur:1680,km:3.0},{date:dAgo(14),dur:1560,km:2.8},{date:dAgo(11),dur:2040,km:3.7},{date:dAgo(9),dur:2400,km:4.3},{date:dAgo(7),dur:2100,km:3.8},{date:dAgo(5),dur:2760,km:4.9},{date:dAgo(3),dur:2880,km:5.2},{date:dAgo(1),dur:3120,km:5.6}];
+  D.run.streak=5;D.run.bestStreak=7;
 }
 if(!D.health.weights.length){
-  D.health.weights=[{date:dAgo(35),kg:82.0},{date:dAgo(28),kg:81.2},{date:dAgo(21),kg:80.5},{date:dAgo(14),kg:79.8},{date:dAgo(7),kg:79.0},{date:dAgo(0),kg:78.3}];
+  D.health.weights=[{date:dAgo(42),kg:83.5},{date:dAgo(35),kg:82.8},{date:dAgo(28),kg:82.0},{date:dAgo(21),kg:81.1},{date:dAgo(14),kg:80.3},{date:dAgo(7),kg:79.5},{date:dAgo(0),kg:78.8}];
   D.health.goal=73;
 }
 if(!D.habits.list.length){
   D.habits.list=[{id:'h1',name:'Meditación',icon:'mind',logs:[],streak:0},{id:'h2',name:'Lectura',icon:'book',logs:[],streak:0},{id:'h3',name:'Agua',icon:'water',logs:[],streak:0}];
-  D.habits.list.forEach(h=>{for(let i=0;i<20;i++){if(Math.random()>.35)h.logs.push(dAgo(i));}h.streak=cStr(h);});
+  D.habits.list.forEach(h=>{for(let i=0;i<25;i++){if(Math.random()>.3)h.logs.push(dAgo(i));}h.streak=cStr(h);});
   D.habits.selId='h1';
 }
-if(!D.fast.history.length){D.fast.history=[{date:dAgo(1),hours:16.2,goal:16},{date:dAgo(2),hours:14.8,goal:16},{date:dAgo(3),hours:16.5,goal:16}];D.fast.streak=2;}
-if(!D.journal.entries.length){D.journal.entries=[{id:'j1',date:today(),mood:'En flujo',text:'Hoy tuve una gran carrera matutina. 5.3 km en 50 minutos. El ayuno de 16 horas fue fácil. Sigo construyendo momentum.'},{id:'j2',date:dAgo(1),mood:'Tranquilo',text:'Día tranquilo. Leí por una hora y medité 15 minutos. Cuando inicio el día con meditación todo fluye mejor.'},{id:'j3',date:dAgo(2),mood:'Reflexivo',text:'Reflexionando sobre mis metas a largo plazo. ¿Qué quiero lograr en los próximos 90 días?'}];}
+if(!D.fast.history.length){
+  D.fast.history=[{date:dAgo(1),hours:16.3,goal:16},{date:dAgo(2),hours:15.1,goal:16},{date:dAgo(3),hours:16.8,goal:16},{date:dAgo(4),hours:14.2,goal:16}];
+  D.fast.streak=3;
+}
+if(!D.journal.entries.length){
+  D.journal.entries=[{id:'j1',date:today(),mood:'En flujo',text:'Hoy tuve una carrera brutal. 5.6 km en 52 minutos. Me sentí completamente en estado de flujo, sin pensar en el esfuerzo. El cuerpo simplemente corre. Quiero más de esto.'},{id:'j2',date:dAgo(1),mood:'Tranquilo',text:'Día de recuperación. Leí dos capítulos y medité 20 minutos. La meditación está cambiando cómo proceso el estrés — lo noto en el trabajo y en cómo reacciono.'},{id:'j3',date:dAgo(3),mood:'Reflexivo',text:'¿Qué quiero lograr en los próximos 90 días? Bajar a 73 kg, mantener racha de carrera, terminar el libro de Estoicismo. Escribirlo ayuda a creerlo.'}];
+}
 persist(D);
 
 // UTILS
@@ -431,7 +583,7 @@ const fmtT=s=>`${pad(s/3600)}:${pad((s%3600)/60)}:${pad(s%60)}`;
 const fmtSh=s=>`${pad(s/60)}:${pad(s%60)}`;
 const fmtD=ds=>{const d=new Date(ds+'T12:00');return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;};
 function cStr(h){let s=0;const d=new Date();while(true){const k=d.toISOString().split('T')[0];if(h.logs.includes(k)){s++;d.setDate(d.getDate()-1);}else break;}return s;}
-const greeting=()=>{const h=new Date().getHours();return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches';};
+const greeting=()=>{const h=new Date().getHours();return h<12?'Buenos\nDías':h<19?'Buenas\nTardes':'Buenas\nNoches';};
 
 // NAV
 function goTo(n){
@@ -452,15 +604,20 @@ function closeModal(id){document.getElementById(id).style.display='none';}
 let runInt=null,runStart=null,runElapsed=0,runRunning=false,kmCI=null;
 function toggleRun(){
   if(!runRunning){
-    runRunning=true;runStart=Date.now()-runElapsed*1000;
-    runInt=setInterval(tickRun,1000);
-    document.getElementById('run-btn').innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pausar';
-    document.getElementById('run-stop').style.display='';
+    runRunning=true;runStart=Date.now()-runElapsed*1000;runInt=setInterval(tickRun,1000);
+    document.getElementById('run-btn-txt').textContent='Pausar';
+    document.getElementById('run-btn-icon').innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    document.getElementById('run-btn-icon').setAttribute('fill','currentColor');
+    document.getElementById('run-btn-icon').setAttribute('stroke','none');
+    document.getElementById('run-stop').style.display='flex';
     document.getElementById('run-timer').classList.add('on');
+    document.getElementById('run-kicker').textContent='Corriendo ahora';
   }else{
     runRunning=false;clearInterval(runInt);
-    document.getElementById('run-btn').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg> Reanudar';
+    document.getElementById('run-btn-txt').textContent='Reanudar';
+    document.getElementById('run-btn-icon').innerHTML='<polygon points="5 3 19 12 5 21 5 3"/>';
     document.getElementById('run-timer').classList.remove('on');
+    document.getElementById('run-kicker').textContent='En pausa';
   }
 }
 function tickRun(){
@@ -473,38 +630,49 @@ function tickRun(){
 }
 function stopRun(){
   runRunning=false;clearInterval(runInt);
-  if(runElapsed>30){const km=+(runElapsed/60/6).toFixed(1);D.run.sessions.push({date:today(),dur:runElapsed,km});if(D.run.sessions.length>20)D.run.sessions.shift();D.run.streak++;persist(D);}
+  if(runElapsed>30){
+    const km=+(runElapsed/60/6).toFixed(1);
+    D.run.sessions.push({date:today(),dur:runElapsed,km});
+    if(D.run.sessions.length>30)D.run.sessions.shift();
+    D.run.streak++;
+    if(D.run.streak>D.run.bestStreak)D.run.bestStreak=D.run.streak;
+    persist(D);
+  }
   runElapsed=0;runStart=null;
   document.getElementById('run-timer').textContent='00:00:00';
   document.getElementById('run-timer').classList.remove('on');
-  document.getElementById('run-btn').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg> Iniciar';
+  document.getElementById('run-btn-txt').textContent='Iniciar';
+  document.getElementById('run-btn-icon').innerHTML='<polygon points="5 3 19 12 5 21 5 3"/>';
   document.getElementById('run-stop').style.display='none';
   document.getElementById('rn-km').textContent='0.0';
   document.getElementById('rn-cal').textContent='0';
   document.getElementById('rn-pace').textContent='--:--';
+  document.getElementById('run-kicker').textContent='Listo para correr';
   renderRun();
 }
 function renderRun(){
-  document.getElementById('run-greeting').textContent=greeting();
+  const g=greeting().split('\n');
+  document.getElementById('run-greeting').innerHTML=g[0]+'<br>'+g[1];
   renderKmChart();renderTimeBars();renderRunStreak();renderBadges();
 }
 function renderKmChart(){
-  const ss=D.run.sessions.slice(-12);
+  const ss=D.run.sessions.slice(-10);
   const cv=document.getElementById('km-chart'),em=document.getElementById('km-empty');
   if(!ss.length){cv.style.display='none';em.style.display='block';return;}
   cv.style.display='block';em.style.display='none';
   if(kmCI)kmCI.destroy();
   const ctx=cv.getContext('2d');
-  const gr=ctx.createLinearGradient(0,0,0,118);
-  gr.addColorStop(0,'rgba(42,122,70,.15)');gr.addColorStop(1,'rgba(42,122,70,.01)');
-  kmCI=new Chart(cv,{type:'line',data:{labels:ss.map(s=>{const d=new Date(s.date+'T12:00');return `${DAYS[d.getDay()]} ${d.getDate()}`;}),datasets:[{data:ss.map(s=>s.km),borderColor:'#2a7a46',backgroundColor:gr,tension:.4,pointRadius:4,pointBackgroundColor:'#2a7a46',fill:true,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#dedad4',borderWidth:1,titleColor:'#6b6860',bodyColor:'#1c1b18',callbacks:{label:c=>`${c.raw} km`}}},scales:{x:{ticks:{color:'#a8a49c',font:{size:10}},grid:{color:'#eeece8'}},y:{ticks:{color:'#a8a49c',font:{size:10},callback:v=>v+'km'},grid:{color:'#eeece8'}}}}});
+  const gr=ctx.createLinearGradient(0,0,0,110);
+  gr.addColorStop(0,'rgba(232,255,0,.18)');gr.addColorStop(1,'rgba(232,255,0,.01)');
+  kmCI=new Chart(cv,{type:'line',data:{labels:ss.map(s=>{const d=new Date(s.date+'T12:00');return `${DAYS[d.getDay()]} ${d.getDate()}`;}),datasets:[{data:ss.map(s=>s.km),borderColor:'#e8ff00',backgroundColor:gr,tension:.4,pointRadius:3,pointBackgroundColor:'#e8ff00',pointBorderColor:'#e8ff00',fill:true,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a1a',borderColor:'#2e2e2e',borderWidth:1,titleColor:'#888',bodyColor:'#f5f4f0',titleFont:{family:'Barlow Condensed',weight:'600',size:11},bodyFont:{family:'Barlow Condensed',weight:'700',size:14},callbacks:{label:c=>`${c.raw} km`}}},scales:{x:{ticks:{color:'#555',font:{family:'Barlow Condensed',weight:'600',size:10},maxRotation:0},grid:{color:'#1a1a1a'}},y:{ticks:{color:'#555',font:{family:'Barlow Condensed',weight:'600',size:10},callback:v=>v+'km'},grid:{color:'#1a1a1a'}}}}});
 }
 function renderTimeBars(){
   const ss=D.run.sessions.slice(-7);const mx=Math.max(...ss.map(s=>s.dur/60),1);
-  document.getElementById('run-bars').innerHTML=ss.map(s=>{const m=Math.round(s.dur/60);const h=Math.max(8,Math.round(m/mx*80));const d=new Date(s.date+'T12:00');return `<div class="bc"><div class="bv">${m}m</div><div class="bbar" style="height:${h}px;background:#2a7a4620;border:1px solid #2a7a4660"></div><div class="bl">${DAYS[d.getDay()]}</div></div>`;}).join('');
+  document.getElementById('run-bars').innerHTML=ss.map(s=>{const m=Math.round(s.dur/60);const h=Math.max(6,Math.round(m/mx*74));const d=new Date(s.date+'T12:00');return `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:28px"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:9px;color:#555">${m}m</div><div style="width:100%;border-radius:3px 3px 0 0;min-height:4px;height:${h}px;background:#e8ff0025;border-top:2px solid #e8ff0066;transition:height .4s"></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;color:#555;letter-spacing:.08em">${DAYS[d.getDay()]}</div></div>`;}).join('');
 }
 function renderRunStreak(){
   document.getElementById('run-streak-n').textContent=D.run.streak;
+  document.getElementById('run-best-streak').textContent=D.run.bestStreak;
   const days=[];for(let i=20;i>=0;i--)days.push(dAgo(i));
   document.getElementById('run-sgrid').innerHTML=days.map(d=>{const done=D.run.sessions.some(s=>s.date===d);const t=d===today();return `<div class="sd${done?' done':''}${t?' today':''}">${new Date(d+'T12:00').getDate()}</div>`;}).join('');
 }
@@ -512,22 +680,24 @@ function renderBadges(){
   const t=D.run.sessions.length,sk=D.run.streak,tot=D.run.sessions.reduce((a,s)=>a+s.km,0);
   const iB='<svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>';
   const iS='<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
-  const badges=[];
-  if(t>=1)badges.push([iB,'Primera carrera']);if(t>=5)badges.push([iB,'5 carreras']);if(t>=10)badges.push([iS,'10 carreras']);
-  if(sk>=3)badges.push([iB,'Racha 3 días']);if(sk>=7)badges.push([iS,'Racha 7 días']);
-  if(D.run.sessions.some(s=>s.km>=5))badges.push([iS,'5 km completados']);if(tot>=50)badges.push([iS,'50 km totales']);
-  document.getElementById('run-badges').innerHTML=badges.map(([ic,lbl])=>`<div class="badge">${ic}${lbl}</div>`).join('')||'<div class="t3" style="font-size:13px">Completa carreras para desbloquear logros</div>';
+  const iM='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>';
+  const all=[];
+  if(t>=1)all.push([iB,'Primera carrera',true]);if(t>=5)all.push([iB,'5 carreras',true]);if(t>=10)all.push([iS,'10 carreras',t>=10]);
+  if(sk>=3)all.push([iB,'Racha 3d',true]);if(sk>=7)all.push([iS,'Racha 7d',sk>=7]);if(sk>=14)all.push([iS,'Racha 14d',sk>=14]);
+  if(D.run.sessions.some(s=>s.km>=5))all.push([iM,'5km',true]);if(D.run.sessions.some(s=>s.km>=10))all.push([iM,'10km',D.run.sessions.some(s=>s.km>=10)]);
+  if(tot>=50)all.push([iS,'50km totales',tot>=50]);if(tot>=100)all.push([iS,'100km totales',tot>=100]);
+  document.getElementById('run-badges').innerHTML=all.map(([ic,lbl,e])=>`<div class="badge${e?' earned':''}">${ic}${lbl}</div>`).join('')||'<div class="empty-state" style="padding:10px 0">Completa carreras para logros</div>';
 }
 
 // HABITS
 let selIcon='target';
 function renderHabits(){
-  document.getElementById('habits-list').innerHTML=D.habits.list.map(h=>{const done=h.logs.includes(today());return `<div class="card" style="margin-bottom:10px"><div class="row jb" style="padding:0"><div class="row gap" style="flex:1"><div class="hibx"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${iconSVG(h.icon)}</svg></div><div><div style="font-size:15px;font-weight:500">${h.name}</div><div class="t3" style="font-size:12px">${h.streak} días consecutivos</div></div></div><button class="hcheck${done?' on':''}" onclick="togHabit('${h.id}')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button></div></div>`;}).join('')||'<div class="t3" style="padding:20px 0;text-align:center;font-size:14px">Agrega tu primer hábito</div>';
+  document.getElementById('habits-list').innerHTML=D.habits.list.map(h=>{const done=h.logs.includes(today());return `<div class="habit-card${done?' done-today':''}"><div class="habit-icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${iconSVG(h.icon)}</svg></div><div style="flex:1"><div class="habit-name">${h.name}</div><div class="habit-streak-lbl"><span>${h.streak}</span> días consecutivos</div></div><button class="hcheck${done?' on':''}" onclick="togHabit('${h.id}')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button></div>`;}).join('')||'<div class="empty-state">Agrega tu primer hábito</div>';
   renderHabFilter();renderHabCal();
 }
 function togHabit(id){const h=D.habits.list.find(x=>x.id===id);if(!h)return;const i=h.logs.indexOf(today());if(i>=0)h.logs.splice(i,1);else h.logs.push(today());h.streak=cStr(h);persist(D);renderHabits();}
 function renderHabFilter(){
-  document.getElementById('hab-filter').innerHTML=D.habits.list.map(h=>{const on=D.habits.selId===h.id;return `<button onclick="selHab('${h.id}')" style="display:inline-flex;align-items:center;gap:6px;background:${on?'var(--green-l)':'var(--s1)'};border:1.5px solid ${on?'var(--green-m)':'var(--b1)'};color:${on?'var(--green)':'var(--t2)'};border-radius:20px;padding:6px 14px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconSVG(h.icon)}</svg>${h.name}</button>`;}).join('');
+  document.getElementById('hab-filter').innerHTML=D.habits.list.map(h=>{const on=D.habits.selId===h.id;return `<button class="hab-pill${on?' active':''}" onclick="selHab('${h.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconSVG(h.icon)}</svg>${h.name}</button>`;}).join('');
 }
 function selHab(id){D.habits.selId=id;renderHabFilter();renderHabCal();}
 function chMonth(dir){D.habits.calMo+=dir;if(D.habits.calMo>11){D.habits.calMo=0;D.habits.calYr++;}if(D.habits.calMo<0){D.habits.calMo=11;D.habits.calYr--;}renderHabCal();}
@@ -536,19 +706,36 @@ function renderHabCal(){
   document.getElementById('cal-label').textContent=`${MONTHS[mo]} ${yr}`;
   const off=(new Date(yr,mo,1).getDay()+6)%7;const days=new Date(yr,mo+1,0).getDate();
   let c='';for(let i=0;i<off;i++)c+='<div></div>';
-  for(let d=1;d<=days;d++){const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const done=h&&h.logs.includes(ds);const t=ds===today();c+=`<div class="sd${done?' done':''}${t?' today':''}" style="font-size:9px">${d}</div>`;}
+  for(let d=1;d<=days;d++){const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const done=h&&h.logs.includes(ds);const t=ds===today();c+=`<div class="cd${done?' done':''}${t?' today':''}" style="font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10px">${d}</div>`;}
   document.getElementById('hab-cal').innerHTML=c;
-  document.getElementById('hab-streak-n').textContent=(h?h.streak:0)+' días';
+  document.getElementById('hab-streak-n').textContent=h?h.streak:0;
 }
-function pickIcon(btn,id){selIcon=id;document.querySelectorAll('.ibt').forEach(b=>b.style.borderColor='var(--b1)');btn.style.borderColor='var(--t1)';}
+function pickIcon(btn,id){selIcon=id;document.querySelectorAll('.ipbtn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');}
 function addHabit(){const name=document.getElementById('h-name').value.trim();if(!name)return;D.habits.list.push({id:'h'+Date.now(),name,icon:selIcon,logs:[],streak:0});if(!D.habits.selId)D.habits.selId=D.habits.list[0].id;document.getElementById('h-name').value='';persist(D);closeModal('add-modal');renderHabits();}
 
 // HEALTH
 let wCI=null;
 function renderHealth(){
   const ws=D.health.weights;
-  if(ws.length){const cur=ws[ws.length-1].kg;const prev=ws.length>1?ws[ws.length-2].kg:cur;document.getElementById('w-cur').textContent=cur.toFixed(1);const diff=cur-prev;const ae=document.getElementById('w-arrow');ae.textContent=diff<-0.05?'↓':diff>0.05?'↑':'→';ae.className=diff<-0.05?'tg':diff>0.05?'tr':'t3';if(D.health.goal){const start=ws[0].kg;const rng=Math.abs(start-D.health.goal)||1;const pct=Math.min(100,Math.round(Math.abs(start-cur)/rng*100));document.getElementById('w-prog').style.width=pct+'%';document.getElementById('w-prog').style.background=cur>D.health.goal?'var(--orange)':'var(--green)';const dd=(cur-D.health.goal).toFixed(1);document.getElementById('w-diff-lbl').textContent=(dd>0?'+':'')+dd+' kg para meta';}}else{document.getElementById('w-cur').textContent='--';document.getElementById('w-arrow').textContent='';}
-  document.getElementById('w-goal-lbl').textContent=D.health.goal?`Meta: ${D.health.goal} kg`:'Meta: no establecida';
+  if(ws.length){
+    const cur=ws[ws.length-1].kg;const prev=ws.length>1?ws[ws.length-2].kg:cur;
+    document.getElementById('w-cur').textContent=cur.toFixed(1);
+    const diff=cur-prev;
+    const te=document.getElementById('w-trend');
+    if(diff<-0.05){te.textContent=`↓ ${Math.abs(diff).toFixed(1)} kg menos`;te.className='weight-trend trend-down';}
+    else if(diff>0.05){te.textContent=`↑ ${diff.toFixed(1)} kg más`;te.className='weight-trend trend-up';}
+    else{te.textContent='→ Sin cambio';te.className='weight-trend trend-same';}
+    if(D.health.goal){
+      document.getElementById('w-goal-val').textContent=D.health.goal;
+      const start=ws[0].kg;const rng=Math.abs(start-D.health.goal)||1;
+      const pct=Math.min(100,Math.round(Math.abs(start-cur)/rng*100));
+      document.getElementById('w-prog').style.width=pct+'%';
+      document.getElementById('w-prog').style.background=cur>D.health.goal?'var(--orange)':'var(--accent)';
+      const dd=(cur-D.health.goal).toFixed(1);
+      const de=document.getElementById('w-diff');de.textContent=(dd>0?'+':'')+dd+' kg';de.className=dd>0?'text-red':'text-green';de.style.fontFamily="'Barlow Condensed',sans-serif";de.style.fontWeight='700';de.style.fontSize='14px';
+    }
+  }else{document.getElementById('w-cur').textContent='--';document.getElementById('w-trend').textContent='';}
+  if(!D.health.goal)document.getElementById('w-goal-val').textContent='--';
   renderWChart();
 }
 function logWeight(){const v=parseFloat(document.getElementById('w-input').value);if(isNaN(v))return;D.health.weights.push({date:today(),kg:v});document.getElementById('w-input').value='';persist(D);renderHealth();}
@@ -558,34 +745,33 @@ function renderWChart(){
   if(!ws.length){cv.style.display='none';em.style.display='block';return;}
   cv.style.display='block';em.style.display='none';
   if(wCI)wCI.destroy();
-  const ctx=cv.getContext('2d');const gr=ctx.createLinearGradient(0,0,0,140);gr.addColorStop(0,'rgba(30,95,160,.14)');gr.addColorStop(1,'rgba(30,95,160,.01)');
-  const ds=[{label:'Peso',data:ws.map(w=>w.kg),borderColor:'#1e5fa0',backgroundColor:gr,tension:.4,pointRadius:4,pointBackgroundColor:'#1e5fa0',fill:true,borderWidth:2}];
-  if(D.health.goal)ds.push({label:'Meta',data:ws.map(()=>D.health.goal),borderColor:'#2a7a4660',borderDash:[4,4],pointRadius:0,fill:false,borderWidth:1.5});
-  wCI=new Chart(cv,{type:'line',data:{labels:ws.map(w=>fmtD(w.date).split(' ').slice(0,2).join(' ')),datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#dedad4',borderWidth:1,titleColor:'#6b6860',bodyColor:'#1c1b18'}},scales:{x:{ticks:{color:'#a8a49c',font:{size:10}},grid:{color:'#eeece8'}},y:{ticks:{color:'#a8a49c',font:{size:10},callback:v=>v+'kg'},grid:{color:'#eeece8'}}}}});
+  const ctx=cv.getContext('2d');const gr=ctx.createLinearGradient(0,0,0,140);gr.addColorStop(0,'rgba(68,138,255,.2)');gr.addColorStop(1,'rgba(68,138,255,.01)');
+  const ds=[{data:ws.map(w=>w.kg),borderColor:'#448aff',backgroundColor:gr,tension:.4,pointRadius:3,pointBackgroundColor:'#448aff',fill:true,borderWidth:2}];
+  if(D.health.goal)ds.push({data:ws.map(()=>D.health.goal),borderColor:'#e8ff0055',borderDash:[5,4],pointRadius:0,fill:false,borderWidth:1.5});
+  wCI=new Chart(cv,{type:'line',data:{labels:ws.map(w=>fmtD(w.date).split(' ').slice(0,2).join(' ')),datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a1a',borderColor:'#2e2e2e',borderWidth:1,titleColor:'#888',bodyColor:'#f5f4f0',titleFont:{family:'Barlow Condensed',weight:'600',size:11},bodyFont:{family:'Barlow Condensed',weight:'700',size:14}}},scales:{x:{ticks:{color:'#555',font:{family:'Barlow Condensed',weight:'600',size:10},maxRotation:0},grid:{color:'#1a1a1a'}},y:{ticks:{color:'#555',font:{family:'Barlow Condensed',weight:'600',size:10},callback:v=>v+'kg'},grid:{color:'#1a1a1a'}}}}});
 }
 
 // FAST
 let fastInt=null;
 function setFG(h){D.fast.goalH=h;persist(D);renderFast();}
 function toggleFast(){
-  if(!D.fast.active){D.fast.active=true;D.fast.startMs=Date.now();persist(D);fastInt=setInterval(tickFast,1000);document.getElementById('fast-btn').textContent='Detener ayuno';document.getElementById('fast-btn').className='btn btn-d btn-w';}
-  else{const hrs=(Date.now()-D.fast.startMs)/3600000;D.fast.history.unshift({date:today(),hours:+hrs.toFixed(1),goal:D.fast.goalH});if(D.fast.history.length>7)D.fast.history.pop();if(hrs>=D.fast.goalH)D.fast.streak++;D.fast.active=false;D.fast.startMs=null;persist(D);clearInterval(fastInt);document.getElementById('fast-btn').textContent='Iniciar ayuno';document.getElementById('fast-btn').className='btn btn-p btn-w';document.getElementById('fast-timer').textContent='00:00';document.getElementById('fast-pct').textContent='0%';document.getElementById('fast-el-v').textContent='0.0';document.getElementById('fast-sub').textContent='en ayuno';document.getElementById('fast-ring').setAttribute('stroke-dashoffset','552.9');document.getElementById('fast-start-lbl').textContent='';renderFast();}
+  if(!D.fast.active){D.fast.active=true;D.fast.startMs=Date.now();persist(D);fastInt=setInterval(tickFast,1000);const b=document.getElementById('fast-btn');b.textContent='Detener ayuno';b.className='btn-fast-main stop';}
+  else{const hrs=(Date.now()-D.fast.startMs)/3600000;D.fast.history.unshift({date:today(),hours:+hrs.toFixed(1),goal:D.fast.goalH});if(D.fast.history.length>10)D.fast.history.pop();if(hrs>=D.fast.goalH)D.fast.streak++;D.fast.active=false;D.fast.startMs=null;persist(D);clearInterval(fastInt);const b=document.getElementById('fast-btn');b.textContent='Iniciar ayuno';b.className='btn-fast-main start';document.getElementById('fast-timer').textContent='00:00';document.getElementById('fast-pct').textContent='0%';document.getElementById('fast-el-v').textContent='0.0';document.getElementById('fast-sub').textContent='en ayuno';document.getElementById('fast-ring').setAttribute('stroke-dashoffset','603.2');document.getElementById('fast-start-lbl').textContent='';renderFast();}
 }
-function tickFast(){if(!D.fast.startMs)return;const el=Math.floor((Date.now()-D.fast.startMs)/1000);const gs=D.fast.goalH*3600;const p=Math.min(1,el/gs);document.getElementById('fast-timer').textContent=fmtSh(el);document.getElementById('fast-el-v').textContent=(el/3600).toFixed(1);document.getElementById('fast-pct').textContent=Math.round(p*100)+'%';document.getElementById('fast-ring').setAttribute('stroke-dashoffset',552.9*(1-p));if(el>=gs)document.getElementById('fast-sub').textContent='Meta alcanzada';}
+function tickFast(){if(!D.fast.startMs)return;const el=Math.floor((Date.now()-D.fast.startMs)/1000);const gs=D.fast.goalH*3600;const p=Math.min(1,el/gs);document.getElementById('fast-timer').textContent=fmtSh(el);document.getElementById('fast-el-v').textContent=(el/3600).toFixed(1);document.getElementById('fast-pct').textContent=Math.round(p*100)+'%';document.getElementById('fast-ring').setAttribute('stroke-dashoffset',603.2*(1-p));if(el>=gs){document.getElementById('fast-sub').textContent='Meta alcanzada';document.getElementById('fast-pct').style.color='var(--accent)';}}
 function renderFast(){
   document.getElementById('fast-goal-v').textContent=D.fast.goalH;document.getElementById('fast-stk-v').textContent=D.fast.streak;
-  [12,14,16,18,20].forEach(h=>{const b=document.getElementById('fg-'+h);if(!b)return;const on=D.fast.goalH===h;b.style.background=on?'var(--orange-l)':'transparent';b.style.borderColor=on?'var(--orange)':'var(--b2)';b.style.color=on?'var(--orange)':'var(--t2)';});
-  if(D.fast.active&&D.fast.startMs){const st=new Date(D.fast.startMs);document.getElementById('fast-start-lbl').textContent=`Iniciado a las ${st.getHours()}:${pad(st.getMinutes())}`;document.getElementById('fast-btn').textContent='Detener ayuno';document.getElementById('fast-btn').className='btn btn-d btn-w';if(!fastInt)fastInt=setInterval(tickFast,1000);tickFast();}
-  const el=document.getElementById('fast-hist');
-  const chkSVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-  const xSVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-  el.innerHTML=D.fast.history.slice(0,5).map(f=>{const done=f.hours>=f.goal;return `<div class="card row jb" style="margin-bottom:8px"><div><div style="font-size:13px;font-weight:500">${fmtD(f.date)}</div><div class="t3" style="font-size:12px">${f.hours}h de ${f.goal}h meta</div></div><div style="display:flex;align-items:center;gap:5px;font-size:13px;color:${done?'var(--green)':'var(--orange)'}">${done?chkSVG:xSVG} ${done?'Completo':'Parcial'}</div></div>`;}).join('')||'<div class="t3" style="padding:16px 0;font-size:14px">Sin registros aún</div>';
+  [12,14,16,18,20].forEach(h=>{const b=document.getElementById('fg-'+h);if(!b)return;b.className='proto-btn'+(D.fast.goalH===h?' on':'');});
+  if(D.fast.active&&D.fast.startMs){const st=new Date(D.fast.startMs);document.getElementById('fast-start-lbl').textContent=`Iniciado a las ${st.getHours()}:${pad(st.getMinutes())}`;const b=document.getElementById('fast-btn');b.textContent='Detener ayuno';b.className='btn-fast-main stop';if(!fastInt)fastInt=setInterval(tickFast,1000);tickFast();}
+  const chk='<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+  const xic='<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+  document.getElementById('fast-hist').innerHTML=D.fast.history.slice(0,5).map(f=>{const done=f.hours>=f.goal;return `<div class="fast-hist-item"><div><div class="fhi-date">${fmtD(f.date)}</div><div class="fhi-sub">${f.hours}h de ${f.goal}h meta</div></div><div class="fhi-status" style="color:${done?'var(--green)':'var(--orange)'}">${done?chk:xic} ${done?'Completo':'Parcial'}</div></div>`;}).join('')||'<div class="empty-state">Sin registros aún</div>';
 }
 
 // JOURNAL
 function renderJournal(){
-  const now=new Date();document.getElementById('j-today-lbl').textContent=`${DAYS[now.getDay()]}, ${now.getDate()} de ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
-  document.getElementById('j-entries').innerHTML=D.journal.entries.map(e=>`<div class="je" onclick="viewJ('${e.id}')"><div class="jd">${fmtD(e.date)}${e.mood?' · '+e.mood:''}</div><div class="jp">${e.text}</div></div>`).join('')||'<div class="t3" style="padding:16px 0;font-size:14px">Escribe tu primera entrada</div>';
+  const now=new Date();document.getElementById('j-today-lbl').textContent=`${DAYS[now.getDay()]} ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('j-entries').innerHTML=D.journal.entries.map(e=>`<div class="je-card" onclick="viewJ('${e.id}')"><div class="je-date">${fmtD(e.date)}</div>${e.mood?`<div class="je-mood-badge">${e.mood}</div>`:''}  <div class="je-preview">${e.text}</div></div>`).join('')||'<div class="empty-state">Escribe tu primera entrada</div>';
 }
 document.getElementById('j-input').addEventListener('input',function(){document.getElementById('j-wc').textContent=this.value.trim().split(/\s+/).filter(Boolean).length+' palabras';});
 function saveJournal(){const text=document.getElementById('j-input').value.trim();if(!text)return;const mood=document.getElementById('j-mood').value;D.journal.entries.unshift({id:'j'+Date.now(),date:today(),mood,text});document.getElementById('j-input').value='';document.getElementById('j-mood').value='';document.getElementById('j-wc').textContent='0 palabras';persist(D);renderJournal();}

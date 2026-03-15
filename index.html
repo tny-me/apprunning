@@ -1163,7 +1163,7 @@ function updateRunUI() {
   document.getElementById('roKm').textContent = d.toFixed(2);
   document.getElementById('roTime').textContent = formatTime(el);
   document.getElementById('roTimeMin').textContent = formatTime(el, true);
-  document.getElementById('roPace').textContent = S.runData.pace > 0 ? formatPace(S.runData.pace) : "--'--"";
+  document.getElementById('roPace').textContent = S.runData.pace > 0 ? formatPace(S.runData.pace) : "--'--\"";
   document.getElementById('roHR').textContent = S.runData.bpm || '---';
   document.getElementById('roCal').textContent = S.runData.calories;
   const zonePos = Math.min(95, Math.max(5, ((S.runData.bpm - 90) / (185 - 90)) * 100));
@@ -1198,7 +1198,7 @@ function stopRun() {
   // Show post-run
   document.getElementById('prKm').textContent = S.runData.distance.toFixed(2);
   document.getElementById('prTime').textContent = formatTime(S.runData.elapsed, true);
-  document.getElementById('prPace').textContent = S.runData.pace > 0 ? formatPace(S.runData.pace) : "--'--"";
+  document.getElementById('prPace').textContent = S.runData.pace > 0 ? formatPace(S.runData.pace) : "--'--\"";
   document.getElementById('prCal').textContent = S.runData.calories;
   document.getElementById('postRunOv').classList.add('active');
 }
@@ -1487,10 +1487,10 @@ function formatTime(s, short = false) {
 }
 function pad(n) { return String(Math.floor(n)).padStart(2, '0'); }
 function formatPace(minPerKm) {
-  if (!minPerKm || !isFinite(minPerKm)) return "--'--"";
+  if (!minPerKm || !isFinite(minPerKm)) return "--'--\"";
   const m = Math.floor(minPerKm);
   const s = Math.round((minPerKm - m) * 60);
-  return m + "\'" + pad(s) + "\"";
+  return m + "'" + pad(s) + "\"";
 }
 
 let toastTimer = null;

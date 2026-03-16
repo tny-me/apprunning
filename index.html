@@ -15,6 +15,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
 <style>
 /* ── DESIGN TOKENS ── */
 :root {
@@ -456,12 +457,13 @@ input::placeholder { color:var(--text-3); }
 // ║  Pega tu config aqui         ║
 // ╚══════════════════════════════╝
 const FB_CFG = {
-  apiKey: "REPLACE_ME",
-  authDomain: "REPLACE_ME.firebaseapp.com",
-  projectId: "REPLACE_ME",
-  storageBucket: "REPLACE_ME.appspot.com",
-  messagingSenderId: "REPLACE_ME",
-  appId: "REPLACE_ME"
+  apiKey: "AIzaSyB1-bDx_MSS0cj29vc4g7shXg-ep77dEA8",
+  authDomain: "straider-app.firebaseapp.com",
+  projectId: "straider-app",
+  storageBucket: "straider-app.firebasestorage.app",
+  messagingSenderId: "467507543142",
+  appId: "1:467507543142:web:dd0825a3af0cb68f3681a7",
+  measurementId: "G-VRQYM8CK1L"
 };
 
 // ── FIREBASE INIT ──
@@ -472,6 +474,8 @@ if (FB_ON) {
     firebase.initializeApp(FB_CFG);
     fbAuth = firebase.auth();
     db = firebase.firestore();
+    // Analytics (optional, won't break if blocked by adblocker)
+    try { firebase.analytics(); } catch(e) {}
     fbAuth.onAuthStateChanged(u => { curUser = u; u ? showApp(u) : showAuth(); });
   } catch(e) { console.warn('Firebase:', e); showApp(null); }
 } else {
